@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabung & Bagi + Min 1 Bagian</title>
+    <style>
+        *{box-sizing:border-box; font-family:system-ui, sans-serif; margin:0; padding:0;}
+        body{max-width:900px; margin:2rem auto; padding:0 1rem; background:#f0f4f8; color:#1e293b;}
+        h1{text-align:center; color:#0f172a; margin-bottom:2rem;}
+        .card{background:white; padding:1.5rem; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:1.5rem;}
+        h2{font-size:1.1rem; margin-bottom:1rem; color:#334155;}
+        .upload-box{border:2px dashed #94a3b8; border-radius:8px; padding:2rem; text-align:center; cursor:pointer; transition:all 0.3s; margin-bottom:1rem;}
+        .upload-box:hover, .upload-box.active{border-color:#3b82f6; background:#eff6ff;}
+        textarea{width:100%; min-height:120px; padding:0.8rem; border:1px solid #cbd5e1; border-radius:6px; resize:vertical; font-family:monospace; font-size:14px; margin-top:0.5rem;}
+        button{background:#2563eb; color:white; border:none; padding:0.8rem 1.5rem; border-radius:8px; font-size:1rem; cursor:pointer; width:100%; transition:background 0.2s; margin-top:0.5rem;}
+        button:hover{background:#1d4ed8;}
+        button.salin{background:#10b981; width:auto; padding:0.4rem 0.8rem; font-size:0.9rem; margin:0;}
+        button.salin:hover{background:#059669;}
+        button.salin.sudah{background:#6366f1;}
+        .hasil-bagian{background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; margin-top:1rem; overflow:hidden;}
+        .hasil-header{display:flex; justify-content:space-between; align-items:center; padding:0.6rem 1rem; background:#f1f5f9; border-bottom:1px solid #e2e8f0; flex-wrap:wrap; gap:0.5rem;}
+        .hasil-teks{padding:1rem; white-space:pre-wrap; word-break:break-all; font-family:monospace; font-size:14px; max-height:400px; overflow:auto;}
+        .status{margin-top:0.5rem; font-size:0.9rem; color:#475569;}
+        .sukses{color:#16a34a; font-weight:500;}
+        .info-duplikat{background:#fef3c7; border:1px solid #fcd34d; padding:0.8rem; border-radius:6px; margin:1rem 0; color:#92400e;}
+        .opsi{display:flex; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;}
+        .opsi label{display:flex; align-items:center; gap:0.3rem; cursor:pointer;}
+        .pengaturan{margin-top:1rem; padding:0.8rem; background:#f1f5f9; border-radius:6px;}
+        input[type="number"], input[type="text"], select{padding:0.4rem; border:1px solid #cbd5e1; border-radius:4px; margin:0.25rem 0;}
+        .baris-nama{display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; margin-top:0.5rem;}
+        .baris-nama input{flex:1; min-width:150px;}
+        .baris-nama select{width:100px;}
+        .bagian-jumlah{background:#e0e7ff; color:#3730a3; padding:0.5rem 0.8rem; border-radius:6px; font-size:0.9rem; font-weight:500; display:inline-block; margin-bottom:1rem;}
+        .tombol-utama{display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;}
+        .tombol-utama button{width:auto; flex:1; min-width:180px;}
+        .keterangan{font-size:0.85rem; color:#64748b; margin-top:0.5rem;}
+        .catatan-min{background:#dcfce7; border:1px solid #22c55e; padding:0.6rem; border-radius:6px; margin-bottom:1rem; color:#166534; font-size:0.9rem;}
+    </style>
+</head>
+<body>
+
+<h1>🔗 Gabung & Bagi + Min 1 Bagian</h1>
+
+<div class="card">
+    <div class="catatan-min">
+        ✅ <strong>Cukup isi minimal 1 bagian</strong> — Bagian 1 saja, Bagian 2 saja, atau keduanya!
+    </div>
+
+    <h2>📂 Bagian Pertama</h2>
+    <div class="opsi">
+        <label><input type="radio" name="mode1" id="mode1File" checked onchange="gantiMode(1)"> Unggah File</label>
+        <label><input type="radio" name="mode1" id="mode1Teks" onchange="gantiMode(1)"> Tempel Teks</label>
+    </div>
+    <div id="upload1" class="upload-box" onclick="document.getElementById('file1').click()">
+        Klik untuk pilih file<br>atau tarik file ke sini
+        <input type="file" id="file1" hidden onchange="bacaFile(1)">
+    </div>
+    <div id="teks1" style="display:none;">
+        <textarea id="inputTeks1" placeholder="Tempel teks bagian pertama di sini... (bisa dikosongkan)"></textarea>
+    </div>
+    <div class="status" id="status1">Belum ada file/teks</div>
+</div>
+
+<div class="card">
+    <h2>📂 Bagian Kedua (Lanjutan)</h2>
+    <div class="opsi">
+        <label><input type="radio" name="mode2" id="mode2File" checked onchange="gantiMode(2)"> Unggah File</label>
+        <label><input type="radio" name="mode2" id="mode2Teks" onchange="gantiMode(2)"> Tempel Teks</label>
+    </div>
+    <div id="upload2" class="upload-box" onclick="document.getElementById('file2').click()">
+        Klik untuk pilih file<br>atau tarik file ke sini
+        <input type="file" id="file2" hidden onchange="bacaFile(2)">
+    </div>
+    <div id="teks2" style="display:none;">
+        <textarea id="inputTeks2" placeholder="Tempel teks bagian kedua di sini... (bisa dikosongkan)"></textarea>
+    </div>
+    <div class="status" id="status2">Belum ada file/teks</div>
+</div>
+
+<div class="card">
+    <h2>⚙️ Pengaturan</h2>
+    <div class="pengaturan">
+        <label>🔍 Cek kesamaan sampai berapa karakter: </label>
+        <input type="number" id="batasDuplikat" value="100" min="10" max="500">
+        <small style="color:#64748b;">(deteksi duplikat sebelum digabung — otomatis dilewati kalau cuma 1 bagian)</small>
+    </div>
+    <div class="pengaturan" style="margin-top:1rem;">
+        <label>📏 Batas karakter per bagian (untuk salin): </label>
+        <input type="number" id="batasKarakter" value="10000" min="100" max="50000">
+        <small style="color:#64748b;">(pembagian hanya untuk salin teks, unduh tetap SATU FILE PENUH)</small>
+    </div>
+    <div class="pengaturan" style="margin-top:1rem;">
+        <label>💾 Nama & Format File Hasil:</label>
+        <div class="baris-nama">
+            <input type="text" id="namaFileOutput" value="hasil" placeholder="Nama file">
+            <select id="ekstensiFile">
+                <option value=".txt">.txt</option>
+                <option value=".html">.html</option>
+                <option value=".js">.js</option>
+                <option value=".css">.css</option>
+                <option value=".json">.json</option>
+                <option value=".py">.py</option>
+                <option value=".md">.md</option>
+                <option value=".xml">.xml</option>
+                <option value=".sql">.sql</option>
+                <option value="">(tanpa ekstensi)</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <button onclick="prosesSemua()">🔍 Gabung + Bagi Otomatis</button>
+    
+    <div id="infoDuplikat" class="info-duplikat" style="display:none;"></div>
+    <div id="infoPembagian" style="display:none; margin-top:1rem;"></div>
+    
+    <div id="tombolFilePenuh" class="tombol-utama" style="display:none;">
+        <button onclick="unduhFilePenuh()" style="background:#f97316;">💾 Unduh File Penuh</button>
+        <button onclick="simpanFilePenuhLokasi()" style="background:#8b5cf6;">📂 Pilih Lokasi & Simpan Penuh</button>
+    </div>
+    <p class="keterangan">📌 File yang diunduh = <strong>SEMUA TEKS UTUH</strong> (tidak terpotong)</p>
+    
+    <h2 style="margin-top:1.5rem;">📋 Hasil Pembagian (untuk disalin)</h2>
+    <div id="wadahHasil"></div>
+</div>
+
+<script>
+let bagian1 = '';
+let bagian2 = '';
+let teksPenuh = '';
+let daftarBagian = [];
+
+function gantiMode(bagian) {
+    const isUnggah = document.getElementById(`mode${bagian}File`).checked;
+    if (bagian === 1) {
+        document.getElementById('upload1').style.display = isUnggah ? 'block' : 'none';
+        document.getElementById('teks1').style.display = isUnggah ? 'none' : 'block';
+        bagian1 = '';
+    } else {
+        document.getElementById('upload2').style.display = isUnggah ? 'block' : 'none';
+        document.getElementById('teks2').style.display = isUnggah ? 'none' : 'block';
+        bagian2 = '';
+    }
+    document.getElementById(`status${bagian}`).textContent = 'Belum ada file/teks';
+    document.getElementById(`status${bagian}`).classList.remove('sukses');
+}
+
+function bacaFile(bagian) {
+    const fileInput = document.getElementById(`file${bagian}`);
+    const file = fileInput.files[0];
+    if (!file) return;
+    const namaBersih = file.name.replace(/\.[^/.]+$/, "");
+    document.getElementById('namaFileOutput').value = namaBersih;
+    const pembaca = new FileReader();
+    pembaca.onload = function(e) {
+        const teks = e.target.result;
+        if (bagian === 1) {
+            bagian1 = teks;
+            document.getElementById('status1').innerHTML = `✅ <span class="sukses">${file.name}</span> (${teks.length} karakter)`;
+        } else {
+            bagian2 = teks;
+            document.getElementById('status2').innerHTML = `✅ <span class="sukses">${file.name}</span> (${teks.length} karakter)`;
+        }
+    };
+    pembaca.readAsText(file);
+}
+
+function cariDanHapusDuplikat(teks1, teks2, batasCek) {
+    if (!teks2.trim()) return { adaDuplikat: false, teksGabungan: teks1 };
+    if (!teks1.trim()) return { adaDuplikat: false, teksGabungan: teks2 };
+    
+    const ujung1 = teks1.trimEnd();
+    const awal2 = teks2.trimStart();
+    const cekMaks = Math.min(batasCek, ujung1.length, awal2.length);
+    
+    let panjangSama = 0, teksYangSama = '';
+    for (let i = cekMaks; i >= 3; i--) {
+        const potonganUjung = ujung1.slice(-i);
+        if (awal2.startsWith(potonganUjung)) {
+            panjangSama = i;
+            teksYangSama = potonganUjung;
+            break;
+        }
+    }
+    if (panjangSama > 0) {
+        return {
+            adaDuplikat: true,
+            panjangDuplikat: panjangSama,
+            teksDuplikat: teksYangSama,
+            teksGabungan: ujung1 + awal2.slice(panjangSama)
+        };
+    } else {
+        const pemisah = ujung1.endsWith('\n') ? '' : '\n';
+        return { adaDuplikat: false, teksGabungan: ujung1 + pemisah + awal2 };
+    }
+}
+
+function bagiTeksJadiBagian(teksPenuh, batasPerBagian) {
+    const hasil = [];
+    let posisi = 0;
+    let nomorBagian = 1;
+    
+    while (posisi < teksPenuh.length) {
+        const potongan = teksPenuh.slice(posisi, posisi + batasPerBagian);
+        hasil.push({
+            nomor: nomorBagian,
+            mulaiKarakter: posisi + 1,
+            sampaiKarakter: Math.min(posisi + batasPerBagian, teksPenuh.length),
+            teks: potongan
+        });
+        posisi += batasPerBagian;
+        nomorBagian++;
+    }
+    return hasil;
+}
+
+function salinTeks(idTombol, teks) {
+    navigator.clipboard.writeText(teks).then(() => {
+        const tombol = document.getElementById(idTombol);
+        tombol.textContent = '✅ Tersalin!';
+        tombol.classList.add('sudah');
+        setTimeout(() => {
+            tombol.textContent = '📋 Salin';
+            tombol.classList.remove('sudah');
+        }, 2000);
+    }).catch(err => alert('Gagal menyalin: ' + err));
+}
+
+function unduhFilePenuh() {
+    if (!teksPenuh) return alert('⚠️ Belum ada teks untuk diunduh!');
+    
+    const namaDasar = document.getElementById('namaFileOutput').value.trim() || 'hasil';
+    const ekstensi = document.getElementById('ekstensiFile').value;
+    const namaLengkap = namaDasar + ekstensi;
+
+    let tipeMime = 'text/plain';
+    if (ekstensi === '.html') tipeMime = 'text/html';
+    else if (ekstensi === '.js') tipeMime = 'application/javascript';
+    else if (ekstensi === '.json') tipeMime = 'application/json';
+    else if (ekstensi === '.css') tipeMime = 'text/css';
+    else if (ekstensi === '.xml') tipeMime = 'text/xml';
+
+    const blob = new Blob([teksPenuh], {type: tipeMime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = namaLengkap;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+async function simpanFilePenuhLokasi() {
+    if (!teksPenuh) return alert('⚠️ Belum ada teks untuk disimpan!');
+    
+    const namaDasar = document.getElementById('namaFileOutput').value.trim() || 'hasil';
+    const ekstensi = document.getElementById('ekstensiFile').value;
+    const namaLengkap = namaDasar + ekstensi;
+
+    let tipeMime = 'text/plain';
+    if (ekstensi === '.html') tipeMime = 'text/html';
+    else if (ekstensi === '.js') tipeMime = 'application/javascript';
+    else if (ekstensi === '.json') tipeMime = 'application/json';
+    else if (ekstensi === '.css') tipeMime = 'text/css';
+    else if (ekstensi === '.xml') tipeMime = 'text/xml';
+
+    const blob = new Blob([teksPenuh], {type: tipeMime});
+
+    if ('showSaveFilePicker' in window) {
+        try {
+            const fileHandle = await window.showSaveFilePicker({suggestedName: namaLengkap});
+            const writable = await fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            alert(`✅ File Penuh berhasil disimpan sebagai: ${namaLengkap}`);
+        } catch (e) { if (e.name !== 'AbortError') unduhFilePenuh(); }
+    } else {
+        unduhFilePenuh();
+    }
+}
+
+function prosesSemua() {
+    if (!document.getElementById('mode1File').checked) bagian1 = document.getElementById('inputTeks1').value;
+    if (!document.getElementById('mode2File').checked) bagian2 = document.getElementById('inputTeks2').value;
+
+    const teks1 = bagian1.trim();
+    const teks2 = bagian2.trim();
+
+    if (!teks1 && !teks2) return alert('⚠️ Minimal isi 1 bagian ya! Bagian 1 ATAU Bagian 2!');
+
+    const batasDuplikat = parseInt(document.getElementById('batasDuplikat').value) || 100;
+    const hasilGabung = cariDanHapusDuplikat(teks1, teks2, batasDuplikat);
+    teksPenuh = hasilGabung.teksGabungan;
+
+    const kotakInfo = document.getElementById('infoDuplikat');
+    if (hasilGabung.adaDuplikat) {
+        kotakInfo.style.display = 'block';
+        kotakInfo.innerHTML = `✅ <strong>Ditemukan duplikat:</strong> ${hasilGabung.panjangDuplikat} karakter dihapus (<code>"${hasilGabung.teksDuplikat}"</code>)`;
+    } else if (teks1 && teks2) {
+        kotakInfo.style.display = 'none';
+    } else {
+        kotakInfo.style.display = 'block';
+        kotakInfo.innerHTML = `ℹ️ <strong>Hanya 1 bagian</strong> — langsung diproses tanpa deteksi duplikat`;
+    }
+
+    const batasPerBagian = parseInt(document.getElementById('batasKarakter').value) || 10000;
+    daftarBagian = bagiTeksJadiBagian(teksPenuh, batasPerBagian);
+
+    const infoPembagian = document.getElementById('infoPembagian');
+    infoPembagian.style.display = 'block';
+    infoPembagian.innerHTML = `
+        <div class="bagian-jumlah">
+            📦 Total teks: <strong>${teksPenuh.length} karakter</strong> → 
+            Dibagi jadi <strong>${daftarBagian.length} bagian</strong> (hanya untuk salin)
+        </div>
+    `;
+
+    document.getElementById('tombolFilePenuh').style.display = 'flex';
+
+    const wadah = document.getElementById('wadahHasil');
+    wadah.innerHTML = '';
+
+    daftarBagian.forEach((bagian, index) => {
+        const idTombolSalin = `salin-${index}`;
+        const htmlBagian = `
+        <div class="hasil-bagian">
+            <div class="hasil-header">
+                <strong>Bagian ${bagian.nomor}</strong>
+                <small>Karakter ${bagian.mulaiKarakter}–${bagian.sampaiKarakter}</small>
+                <button id="${idTombolSalin}" class="salin" onclick="salinTeks('${idTombolSalin}', ${JSON.stringify(bagian.teks).replace(/"/g, '&quot;')})">📋 Salin</button>
+            </div>
+            <div class="hasil-teks">${escapeHtml(bagian.teks)}</div>
+        </div>
+        `;
+        wadah.innerHTML += htmlBagian;
+    });
+}
+
+function escapeHtml(teks) {
+    const div = document.createElement('div');
+    div.textContent = teks;
+    return div.innerHTML;
+}
+
+function setupDragDrop(idEl, bagian) {
+    const el = document.getElementById(idEl);
+    ['dragenter','dragover','dragleave','drop'].forEach(ev => el.addEventListener(ev, e => e.preventDefault()));
+    ['dragenter','dragover'].forEach(ev => el.addEventListener(ev, () => el.classList.add('active')));
+    ['dragleave','drop'].forEach(ev => el.addEventListener(ev, () => el.classList.remove('active')));
+    el.addEventListener('drop', e => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (bagian === 1) {
+            document.getElementById('file1').files = e.dataTransfer.files;
+            document.getElementById('mode1File').checked = true;
+            gantiMode(1);
+        } else {
+            document.getElementById('file2').files = e.dataTransfer.files;
+            document.getElementById('mode2File').checked = true;
+            gantiMode(2);
+        }
+        bacaFile(bagian);
+    });
+}
+setupDragDrop('upload1', 1);
+setupDragDrop('upload2', 2);
+</script>
+
+</body>
+</html>
